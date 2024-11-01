@@ -2,11 +2,15 @@ export const config = {
   runtime: "edge",
 };
 
-const targetUrl = "https://www.baidu.com"; // 请替换为你想要代理的目标API
+export default async (req: Request, res: Response) => {
+  console.log(JSON.stringify(req), '8--------')
 
-export default async (req: Request, res: any, a) => {
-  console.log(req, res, a, '8--------')
   try {
+    const { searchParams } = new URL(req.url)
+    const targetUrl = searchParams.get('r')
+    if (!targetUrl) {
+      return new Response('No target URL provided', { status: 400 })
+    }
     // 构建请求选项
     const options = {
       method: req.method, // 转发请求方法
