@@ -5,7 +5,7 @@ export const config = {
 export default async (req: Request) => {
   try {
     const urlRes = new URL(req.url)
-    console.log("======req====", urlRes)
+    console.log("======req====", urlRes.toJSON(), urlRes.hostname, urlRes.pathname, urlRes.searchParams, urlRes.search, urlRes.href)
     const { searchParams } = urlRes;
     const targetUrl = searchParams.get('r')
     const showLog = searchParams.get('log')
