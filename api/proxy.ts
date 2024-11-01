@@ -18,10 +18,10 @@ export default async (req: Request) => {
       headersObject[key] = value;
     });
 
-    console.log('Request Headers:', headersObject);
-
-    // 获取请求体
-    const requestBody = await req.text();
+    let requestBody;
+    if (req.method === 'POST') {
+      requestBody = await req.text();
+    }
     // 构建请求选项
     const options = {
       method: req.method, // 转发请求方法
@@ -29,24 +29,9 @@ export default async (req: Request) => {
       body: requestBody, // 转发请求体
     };
 
+    showLog && console.log(options, '请求options');
     // 发送请求
-    const response = await fetch(targetUrl, options);
-
-    // 获取响应数据
-    const responseData = await response.json();
-
-    // 构建响应
-    const proxyResponse = new Response(JSON.stringify(responseData), {
-      status: response.status,
-      headers: {
-        "Content-Type": "application/json",
-        ...response.headers,
-      },
-    });
-    showLog && console.log(JSON.stringify(options), '请求options');
-
-    // 将响应返回给客户端
-    return proxyResponse
+    return fetch(targetUrl, options);
   } catch (error) {
     console.error("Proxy request failed:", error);
     const errorResponse = new Response(
