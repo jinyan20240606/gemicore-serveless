@@ -6,6 +6,7 @@ export default async (req: Request) => {
   try {
     const { searchParams } = new URL(req.url)
     const targetUrl = searchParams.get('r')
+    const showLog = searchParams.get('log')
     if (!targetUrl) {
       return new Response('No target URL provided', { status: 400 })
     }
@@ -30,6 +31,7 @@ export default async (req: Request) => {
         ...response.headers,
       },
     });
+    showLog && console.log(options, '请求options');
 
     // 将响应返回给客户端
     return proxyResponse
