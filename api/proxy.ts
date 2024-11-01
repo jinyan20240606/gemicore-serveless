@@ -2,9 +2,7 @@ export const config = {
   runtime: "edge",
 };
 
-export default async (req: Request, res: Response) => {
-  console.log(JSON.stringify(req), '8--------')
-
+export default async (req: Request) => {
   try {
     const { searchParams } = new URL(req.url)
     const targetUrl = searchParams.get('r')
