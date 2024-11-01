@@ -4,7 +4,8 @@ export const config = {
 
 const targetUrl = "https://www.baidu.com"; // 请替换为你想要代理的目标API
 
-export default async (req: Request, res: any) => {
+export default async (req: Request, res: any, a) => {
+  console.log(req, res, a, '8--------')
   try {
     // 构建请求选项
     const options = {
@@ -29,7 +30,7 @@ export default async (req: Request, res: any) => {
     });
 
     // 将响应返回给客户端
-    res.send(proxyResponse);
+    return proxyResponse
   } catch (error) {
     console.error("Proxy request failed:", error);
     const errorResponse = new Response(
@@ -43,6 +44,6 @@ export default async (req: Request, res: any) => {
         },
       }
     );
-    res.send(errorResponse);
+    return errorResponse;
   }
 };
