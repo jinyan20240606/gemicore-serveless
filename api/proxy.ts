@@ -10,14 +10,23 @@ export default async (req: Request) => {
     if (!targetUrl) {
       return new Response('No target URL provided', { status: 400 })
     }
+    // 获取请求头
+    const headers = req.headers;
+    const headersObject = {};
+
+    headers.forEach((value, key) => {
+      headersObject[key] = value;
+    });
+
+    console.log('Request Headers:', headersObject);
+
+    // 获取请求体
+    const requestBody = await req.text();
     // 构建请求选项
     const options = {
       method: req.method, // 转发请求方法
-      headers: req.headers, // 转发请求头
-      cookies: req.headers['cookie'],
-      cookie: req.headers.get('cookie'),
-      // name: req.body['name'],
-      body: req.body ? JSON.stringify(req.body) : undefined, // 转发请求体
+      headers: headersObject, // 转发请求头
+      body: requestBody, // 转发请求体
     };
 
     // 发送请求
