@@ -2,36 +2,28 @@ export const config = {
   runtime: 'edge',
 }
 
-export default async (req: Request) => {
-  // Fetch from the backend, but copy the user's authorization cookie into
-  // the authorization header.
-  // const r = await fetch(
-  //   'https://res.cloudinary.com/zeit-inc/image/fetch/https://raw.githubusercontent.com/vercel/vercel/main/packages/frameworks/logos/next.svg',
-  //   {
-  //     headers: {
-  //       authorization: getCookies(req).get('authorization') || '',
-  //     },
-  //   }
-  // )
-  return new Response(JSON.stringify({ hello: 'world' }), {
-    // status: r.status,
-    // headers: {
-    //   // Allow list of backend headers.
-    //   'content-type': r.headers.get('content-type') || '',
-    // },
-  })
-}
+const targetUrl = 'https://api.example.com/data'; // 请替换为你想要代理的目标API
 
-// function getCookies(req: Request) {
-//   const cookie = req.headers.get('cookie')
-//   const cookies = new Map()
-//   if (!cookie) {
-//     return cookies
-//   }
-//   const pairs = cookie.split(/;\s+/)
-//   for (const pair of pairs) {
-//     const parts = pair.trim().split('=')
-//     cookies.set(parts[0], parts[1])
-//   }
-//   return cookies
-// }
+export default async (req: Request, res: any) => {
+  try {
+    // 构建请求选项
+    const options = {
+      method: req.method, // 转发请求方法
+      headers: req.headers, // 转发请求头
+      body: req.body ? JSON.stringify(req.body) : undefined, // 转发请求体
+    };
+
+    // // 发送请求
+    // const response = await fetch(targetUrl, options);
+
+    // // 获取响应数据
+    // const responseData = await response.json();
+
+    // 将响应返回给客户端
+    // res.status(response.status).json(responseData);
+    res.status(201).json(options);
+  } catch (error) {
+    console.error('Proxy request failed:', error);
+    res.status(500).json({ error: 'An error occurred while processing your request.' });
+  }
+}
