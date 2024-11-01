@@ -14,6 +14,9 @@ export default async (req: Request) => {
     const options = {
       method: req.method, // 转发请求方法
       headers: req.headers, // 转发请求头
+      cookies: req.headers['cookie'],
+      cookie: req.headers.get('cookie'),
+      // name: req.body['name'],
       body: req.body ? JSON.stringify(req.body) : undefined, // 转发请求体
     };
 
