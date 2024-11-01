@@ -1,8 +1,8 @@
 export const config = {
-  runtime: 'edge',
-}
+  runtime: "edge",
+};
 
-const targetUrl = 'https://api.example.com/data'; // 请替换为你想要代理的目标API
+const targetUrl = "https://www.baidu.com"; // 请替换为你想要代理的目标API
 
 export default async (req: Request, res: any) => {
   try {
@@ -13,17 +13,36 @@ export default async (req: Request, res: any) => {
       body: req.body ? JSON.stringify(req.body) : undefined, // 转发请求体
     };
 
-    // // 发送请求
-    // const response = await fetch(targetUrl, options);
+    // 发送请求
+    const response = await fetch(targetUrl, options);
 
-    // // 获取响应数据
-    // const responseData = await response.json();
+    // 获取响应数据
+    const responseData = await response.json();
+
+    // 构建响应
+    const proxyResponse = new Response(JSON.stringify(responseData), {
+      status: response.status,
+      headers: {
+        "Content-Type": "application/json",
+        ...response.headers,
+      },
+    });
 
     // 将响应返回给客户端
-    // res.status(response.status).json(responseData);
-    res.status(201).json(options);
+    res.send(proxyResponse);
   } catch (error) {
-    console.error('Proxy request failed:', error);
-    res.status(500).json({ error: 'An error occurred while processing your request.' });
+    console.error("Proxy request failed:", error);
+    const errorResponse = new Response(
+      JSON.stringify({
+        error: "An error occurred while processing your request.",
+      }),
+      {
+        status: 500,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    res.send(errorResponse);
   }
-}
+};
