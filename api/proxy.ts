@@ -4,7 +4,9 @@ export const config = {
 
 export default async (req: Request) => {
   try {
-    const { searchParams } = new URL(req.url)
+    const urlRes = new URL(req.url)
+    console.log("======req====", urlRes)
+    const { searchParams } = urlRes;
     const targetUrl = searchParams.get('r')
     const showLog = searchParams.get('log')
     if (!targetUrl) {
